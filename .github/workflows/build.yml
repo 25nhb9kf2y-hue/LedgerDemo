@@ -1,0 +1,25 @@
+name: Build iOS demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract source
+        run: unzip LedgerDemo-iOS-source.zip -d source
+
+      - name: Build IPA
+        run: bash source/build-unsigned.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unsigned-ipa
+          path: source/output/LedgerDemo-unsigned.ipa
+          if-no-files-found: error
